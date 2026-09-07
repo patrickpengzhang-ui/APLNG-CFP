@@ -982,6 +982,7 @@ def main():
     all_items = []
 
     # --- RSS/Atom sources ---
+        # --- RSS/Atom sources ---
     if args.local_feed:
         print(f"Reading local feed fixture: {args.local_feed}")
         raw = fetch(args.local_feed)
@@ -989,7 +990,8 @@ def main():
         for it in parsed:
             it["trusted"] = False
         all_items.extend(parsed)
-        elif not args.no_feeds:
+
+    elif not args.no_feeds:
         for src in SOURCES:
             print(f"Fetching feed: {src['name']} <{src['url']}>")
             try:
@@ -997,7 +999,9 @@ def main():
             except Exception as e:
                 print(f"  ! failed to fetch {src['name']}: {e}", file=sys.stderr)
                 continue
+
             parsed = parse_rss(raw, src["name"])
+
             for it in parsed:
                 it["trusted"] = src.get("trusted", False)
 
