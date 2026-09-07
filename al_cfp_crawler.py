@@ -989,7 +989,7 @@ def main():
         for it in parsed:
             it["trusted"] = False
         all_items.extend(parsed)
-    elif not args.no_feeds:
+        elif not args.no_feeds:
         for src in SOURCES:
             print(f"Fetching feed: {src['name']} <{src['url']}>")
             try:
@@ -1000,7 +1000,14 @@ def main():
             parsed = parse_rss(raw, src["name"])
             for it in parsed:
                 it["trusted"] = src.get("trusted", False)
+
             print(f"  -> {len(parsed)} items")
+
+            # Diagnostic: show titles returned by Google Alerts.
+            if src["name"] == "Google Alerts" and parsed:
+                for it in parsed:
+                    print(f"     GOOGLE ALERT: {it.get('title', '(no title)')}")
+
             all_items.extend(parsed)
 
     # --- Crawled HTML sources ---
