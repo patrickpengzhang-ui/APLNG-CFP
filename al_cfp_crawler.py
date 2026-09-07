@@ -98,7 +98,7 @@ SOURCES = [
         "url": "https://www.google.com/alerts/feeds/09221106413290457706/10064659000229388896",
     },
     {
-        "name": "Google Alert — Applied Linguistics",
+        "name": "Google Alert — Second Language Acquisition",
         "url": "https://www.google.com/alerts/feeds/09221106413290457706/6613160108504554458",
     },
     {
