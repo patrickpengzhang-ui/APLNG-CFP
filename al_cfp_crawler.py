@@ -209,6 +209,18 @@ def strip_tags(text: str) -> str:
 def clean_text(text: str) -> str:
     return re.sub(r"\s+", " ", html.unescape(strip_tags(text or ""))).strip()
 
+def is_valid_link(url: str) -> bool:
+    """Reject non-web links that should never appear in the RSS feed."""
+    if not url:
+        return False
+
+    url = url.strip().lower()
+
+    return not url.startswith((
+        "javascript:",
+        "mailto:",
+        "#",
+    ))
 
 # ---------------------------------------------------------------------------
 # RSS parsing
@@ -558,6 +570,27 @@ def is_relevant(item) -> bool:
     return bool(KEYWORD_PATTERN.search(haystack))
 
 
+def is_valid_item(item) -> bool:
+    """Reject malformed or obvious navigation items."""
+    link = item.get("link", "").strip()
+
+    if not is_valid_link(link):
+        return False
+
+    title = item.get("title", "").strip().lower()
+
+    # AAAL's Events page contains some navigation links mixed in with
+    # actual events. These should never become feed entries.
+    if item.get("source") == "AAAL — Events":
+        if title in {
+            "about",
+            "guidelines",
+        }:
+            return False
+
+    return True
+
+
 def dedupe(items):
     seen = set()
     out = []
@@ -855,6 +888,7 @@ def main():
             print(f"  -> {len(parsed)} items")
             all_items.extend(parsed)
 
+    all_items = [it for it in all_items if is_valid_item(it)]
     all_items = dedupe(all_items)
 
     if args.show_all:
