@@ -93,18 +93,158 @@ SOURCES = [
         "name": "LINGUIST List — Calls for Papers",
         "url": "https://linguistlist.org/issues/rss/calls",
     },
+
+    # Google Alerts
     {
-        "name": "Google Alert — Applied Linguistics",
+        "name": "Google Alerts",
+        "url": "https://www.google.com/alerts/feeds/09221106413290457706/16868280224180110473",
+    },
+    {
+        "name": "Google Alerts",
+        "url": "https://www.google.com/alerts/feeds/09221106413290457706/16868280224180111896",
+    },
+    {
+        "name": "Google Alerts",
+        "url": "https://www.google.com/alerts/feeds/09221106413290457706/6085807779740863090",
+    },
+    {
+        "name": "Google Alerts",
+        "url": "https://www.google.com/alerts/feeds/09221106413290457706/8128904541003854616",
+    },
+    {
+        "name": "Google Alerts",
+        "url": "https://www.google.com/alerts/feeds/09221106413290457706/8128904541003854371",
+    },
+    {
+        "name": "Google Alerts",
+        "url": "https://www.google.com/alerts/feeds/09221106413290457706/8128904541003855803",
+    },
+    {
+        "name": "Google Alerts",
+        "url": "https://www.google.com/alerts/feeds/09221106413290457706/6085807779740864281",
+    },
+    {
+        "name": "Google Alerts",
+        "url": "https://www.google.com/alerts/feeds/09221106413290457706/6085807779740862176",
+    },
+    {
+        "name": "Google Alerts",
+        "url": "https://www.google.com/alerts/feeds/09221106413290457706/6085807779740861277",
+    },
+    {
+        "name": "Google Alerts",
+        "url": "https://www.google.com/alerts/feeds/09221106413290457706/6085807779740863702",
+    },
+    {
+        "name": "Google Alerts",
+        "url": "https://www.google.com/alerts/feeds/09221106413290457706/10064659000229390201",
+    },
+    {
+        "name": "Google Alerts",
+        "url": "https://www.google.com/alerts/feeds/09221106413290457706/4191733852595306456",
+    },
+    {
+        "name": "Google Alerts",
+        "url": "https://www.google.com/alerts/feeds/09221106413290457706/4191733852595303238",
+    },
+    {
+        "name": "Google Alerts",
+        "url": "https://www.google.com/alerts/feeds/09221106413290457706/4191733852595305513",
+    },
+    {
+        "name": "Google Alerts",
+        "url": "https://www.google.com/alerts/feeds/09221106413290457706/8128904541003857262",
+    },
+    {
+        "name": "Google Alerts",
+        "url": "https://www.google.com/alerts/feeds/09221106413290457706/8128904541003854403",
+    },
+    {
+        "name": "Google Alerts",
+        "url": "https://www.google.com/alerts/feeds/09221106413290457706/6613160108504554477",
+    },
+    {
+        "name": "Google Alerts",
         "url": "https://www.google.com/alerts/feeds/09221106413290457706/10064659000229388896",
     },
     {
-        "name": "Google Alert — Second Language Acquisition",
+        "name": "Google Alerts",
+        "url": "https://www.google.com/alerts/feeds/09221106413290457706/14886633081177306042",
+    },
+    {
+        "name": "Google Alerts",
+        "url": "https://www.google.com/alerts/feeds/09221106413290457706/4901757277240899853",
+    },
+    {
+        "name": "Google Alerts",
+        "url": "https://www.google.com/alerts/feeds/09221106413290457706/14203512700509310094",
+    },
+    {
+        "name": "Google Alerts",
+        "url": "https://www.google.com/alerts/feeds/09221106413290457706/10585992327076473776",
+    },
+    {
+        "name": "Google Alerts",
+        "url": "https://www.google.com/alerts/feeds/09221106413290457706/6613160108504551800",
+    },
+    {
+        "name": "Google Alerts",
+        "url": "https://www.google.com/alerts/feeds/09221106413290457706/6613160108504554419",
+    },
+    {
+        "name": "Google Alerts",
+        "url": "https://www.google.com/alerts/feeds/09221106413290457706/6613160108504555217",
+    },
+    {
+        "name": "Google Alerts",
+        "url": "https://www.google.com/alerts/feeds/09221106413290457706/6613160108504554444",
+    },
+    {
+        "name": "Google Alerts",
+        "url": "https://www.google.com/alerts/feeds/09221106413290457706/6613160108504553379",
+    },
+    {
+        "name": "Google Alerts",
+        "url": "https://www.google.com/alerts/feeds/09221106413290457706/8128904541003854857",
+    },
+    {
+        "name": "Google Alerts",
+        "url": "https://www.google.com/alerts/feeds/09221106413290457706/10585992327076474418",
+    },
+    {
+        "name": "Google Alerts",
+        "url": "https://www.google.com/alerts/feeds/09221106413290457706/8128904541003853972",
+    },
+    {
+        "name": "Google Alerts",
+        "url": "https://www.google.com/alerts/feeds/09221106413290457706/10585992327076474343",
+    },
+    {
+        "name": "Google Alerts",
+        "url": "https://www.google.com/alerts/feeds/09221106413290457706/6613160108504551852",
+    },
+    {
+        "name": "Google Alerts",
+        "url": "https://www.google.com/alerts/feeds/09221106413290457706/11062702776050807527",
+    },
+    {
+        "name": "Google Alerts",
+        "url": "https://www.google.com/alerts/feeds/09221106413290457706/10585992327076471477",
+    },
+    {
+        "name": "Google Alerts",
         "url": "https://www.google.com/alerts/feeds/09221106413290457706/6613160108504554458",
     },
+    {
+        "name": "Google Alerts",
+        "url": "https://www.google.com/alerts/feeds/09221106413290457706/6613160108504552563",
+    },
+
     {
         "name": "LINGUIST List — Conference Announcements",
         "url": "https://linguistlist.org/issues/rss/confs",
     },
+
     {
         "name": "Ling Alert",
         "url": "https://lingalert.com/feed/",
