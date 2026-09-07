@@ -214,46 +214,148 @@ def clean_text(text: str) -> str:
 # RSS parsing
 # ---------------------------------------------------------------------------
 def parse_rss(xml_bytes: bytes, source_name: str):
-    """Parse an RSS 2.0 (or close enough) document into a list of item dicts."""
+    """Parse both RSS 2.0 and Atom feeds into a common item format.
+
+    Supports:
+      - RSS 2.0: <item>
+      - Atom:    <entry> (used by Google Alerts)
+    """
     items = []
+
     try:
         root = ET.fromstring(xml_bytes)
     except ET.ParseError as e:
         print(f"  ! could not parse feed from {source_name}: {e}", file=sys.stderr)
         return items
 
-    for item in root.iter("item"):
-        def text_of(tag):
-            el = item.find(tag)
-            return el.text.strip() if el is not None and el.text else ""
+    def local_name(tag):
+        """Return the tag name without an XML namespace."""
+        return tag.rsplit("}", 1)[-1]
 
-        title = html.unescape(text_of("title"))
-        link = text_of("link")
-        guid = text_of("guid") or link
-        pub_date_raw = text_of("pubDate")
-        description = clean_text(text_of("description"))
+    def child_text(element, names):
+        """Find the first child whose local tag name matches one of names."""
+        for child in list(element):
+            if local_name(child.tag) in names:
+                text = "".join(child.itertext()).strip()
+                if text:
+                    return text
+        return ""
 
-        pub_dt = None
-        if pub_date_raw:
-            try:
-                pub_dt = parsedate_to_datetime(pub_date_raw)
-            except (TypeError, ValueError):
-                # LINGUIST List uses ISO 8601 with offset, e.g. 2026-09-04T11:05:02-04:00
-                try:
-                    pub_dt = datetime.fromisoformat(pub_date_raw)
-                except ValueError:
-                    pub_dt = None
+    def parse_date(raw):
+        if not raw:
+            return None
+
+        try:
+            return parsedate_to_datetime(raw)
+        except (TypeError, ValueError):
+            pass
+
+        try:
+            return datetime.fromisoformat(raw.replace("Z", "+00:00"))
+        except ValueError:
+            return None
+
+    # ------------------------------------------------------------------
+    # RSS 2.0: <item>
+    # ------------------------------------------------------------------
+    rss_items = [
+        el for el in root.iter()
+        if local_name(el.tag) == "item"
+    ]
+
+    for item in rss_items:
+        title = html.unescape(child_text(item, {"title"}))
+
+        link = child_text(item, {"link"})
+
+        guid = child_text(item, {"guid"}) or link
+
+        pub_date_raw = child_text(
+            item,
+            {"pubDate", "published", "updated", "date"}
+        )
+
+        description = clean_text(
+            child_text(item, {"description", "summary", "content"})
+        )
+
+        pub_dt = parse_date(pub_date_raw)
+
         if pub_dt and pub_dt.tzinfo is None:
             pub_dt = pub_dt.replace(tzinfo=timezone.utc)
 
-        items.append({
-            "title": title,
-            "link": link,
-            "guid": guid,
-            "pub_dt": pub_dt,
-            "description": description,
-            "source": source_name,
-        })
+        if title or link:
+            items.append({
+                "title": title,
+                "link": link,
+                "guid": guid,
+                "pub_dt": pub_dt,
+                "description": description,
+                "source": source_name,
+            })
+
+    # ------------------------------------------------------------------
+    # Atom: <entry>
+    # Google Alerts uses Atom rather than RSS 2.0.
+    # ------------------------------------------------------------------
+    if not rss_items:
+        atom_entries = [
+            el for el in root.iter()
+            if local_name(el.tag) == "entry"
+        ]
+
+        for entry in atom_entries:
+            title = html.unescape(
+                child_text(entry, {"title"})
+            )
+
+            # Atom links are normally:
+            # <link href="https://example.com/..." />
+            link = ""
+            for child in list(entry):
+                if local_name(child.tag) != "link":
+                    continue
+
+                href = child.attrib.get("href", "").strip()
+                rel = child.attrib.get("rel", "alternate").strip()
+
+                if href and rel in ("alternate", ""):
+                    link = href
+                    break
+
+                if href and not link:
+                    link = href
+
+            # Some Atom feeds may put the URL as element text instead.
+            if not link:
+                link = child_text(entry, {"link"})
+
+            guid = child_text(entry, {"id"}) or link
+
+            pub_date_raw = child_text(
+                entry,
+                {"published", "updated", "pubDate", "date"}
+            )
+
+            description = clean_text(
+                child_text(entry, {"summary", "content", "description"})
+            )
+
+            pub_dt = parse_date(pub_date_raw)
+
+            if pub_dt and pub_dt.tzinfo is None:
+                pub_dt = pub_dt.replace(tzinfo=timezone.utc)
+
+            if title or link:
+                items.append({
+                    "title": title,
+                    "link": link,
+                    "guid": guid,
+                    "pub_dt": pub_dt,
+                    "description": description,
+                    "source": source_name,
+                })
+
     return items
 
 
