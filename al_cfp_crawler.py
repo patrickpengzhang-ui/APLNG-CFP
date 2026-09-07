@@ -98,6 +98,10 @@ SOURCES = [
         "url": "https://www.google.com/alerts/feeds/09221106413290457706/10064659000229388896",
     },
     {
+        "name": "Google Alert — Applied Linguistics",
+        "url": "https://www.google.com/alerts/feeds/09221106413290457706/6613160108504554458",
+    },
+    {
         "name": "LINGUIST List — Conference Announcements",
         "url": "https://linguistlist.org/issues/rss/confs",
     },
