@@ -5,10 +5,10 @@
     <link>https://linguistlist.org/</link>
     <description>Aggregated, filtered feed of calls for papers and conference announcements relevant to applied linguistics, crawled and pulled from LINGUIST List, Ling Alert, WikiCFP and other sources.</description>
     <language>en-us</language>
-    <lastBuildDate>Mon, 07 Sep 2026 11:03:59 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 07 Sep 2026 11:37:36 +0000</lastBuildDate>
     <generator>al_cfp_crawler.py</generator>
     <item>
-      <title>[Google Alert — Applied Linguistics] Global Conference on Language, Culture &amp; Cognitive Education in the Digital Era - Academicsworld</title>
+      <title>[Google Alert — Second Language Acquisition] Global Conference on Language, Culture &amp; Cognitive Education in the Digital Era - Academicsworld</title>
       <link>https://www.google.com/url?rct=j&amp;sa=t&amp;url=https://www.academicsworld.org/Conference/34808/GCLCCED/call&amp;ct=ga&amp;cd=CAIyGmZhY2M5NjJmNDM2NjRjNTM6Y29tOmVuOlVT&amp;usg=AOvVaw12fBqSlbFK2Ya0zeosho4M</link>
       <guid isPermaLink="false">tag:google.com,2013:googlealerts/feed:2176978900460551374</guid>
       <pubDate>Sun, 06 Sep 2026 20:48:54 +0000</pubDate>
@@ -115,22 +115,10 @@
       <description>8 ILL 2026 ILL 2026 | Innovation in Language Learning 19th Edition - International Conference ( ) Italy, Firenze 2026-11-12 ~ 2026-11-13 2026-09-02 [Passed] (Abstract Submission Due Date: 2026-09-02 [Passed])</description>
     </item>
     <item>
-      <title>[AAAL — Events] About</title>
-      <link>javascript:void(0);</link>
-      <guid isPermaLink="false">javascript:void(0);</guid>
-      <description>About About AAAL</description>
-    </item>
-    <item>
       <title>[AAAL — Events] AAAL 2027 Virtual Day</title>
       <link>https://www.aaal.org/aaal-2027-virtual-</link>
       <guid isPermaLink="false">https://www.aaal.org/aaal-2027-virtual-</guid>
       <description>AAAL 2027 Virtual Day 2027 Virtual Plenary</description>
-    </item>
-    <item>
-      <title>[AAAL — Events] Guidelines</title>
-      <link>https://www.aaal.org/guidelines</link>
-      <guid isPermaLink="false">https://www.aaal.org/guidelines</guid>
-      <description>Guidelines AAAL Policy on Harassment</description>
     </item>
   </channel>
 </rss>
