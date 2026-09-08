@@ -1545,25 +1545,79 @@ def is_expired(item) -> bool:
     # ------------------------------------------------------------
     # 4. Clearly labelled event/conference dates
     #
-    # We deliberately DO NOT inspect every date in the description.
-    # A date must follow a label that strongly indicates it is the
-    # actual event date.
+    # LINGUIST List has two generic "Date:" fields:
+    #
+    #   Date: 04-Sep-2026
+    #       -> announcement date
+    #
+    #   Date: 24-Mar-2027 - 27-Mar-2027
+    #       -> actual conference date
+    #
+    # For LINGUIST List, ignore the first generic Date: field but
+    # evaluate subsequent Date: fields as event dates.
+    #
+    # Other sources keep the original standalone "date" behavior.
     # ------------------------------------------------------------
-    event_context = re.compile(
-        r"(?:"
-        r"when|"
-        r"event date|event dates|"
-        r"conference date|conference dates|"
-        r"meeting date|meeting dates|"
-        r"held on|held from|"
-        r"takes place|"
-        r"will take place|"
-        r"scheduled for|"
-        r"date"
-        r")"
-        r"\s*[:\-]?\s*.{0,120}",
-        re.IGNORECASE,
-    )
+
+    if item.get("source") in {
+        "LINGUIST List — Calls for Papers",
+        "LINGUIST List — Conference Announcements",
+    }:
+        # Find all generic "Date:" fields.
+        date_fields = list(
+            re.finditer(
+                r"\bDate\s*:\s*.{0,120}",
+                text,
+                re.IGNORECASE,
+            )
+        )
+
+        # The first Date: is the LINGUIST List announcement date.
+        # Subsequent Date: fields are event/conference dates.
+        for context in date_fields[1:]:
+            dates = list(date_re.finditer(context.group(0)))
+
+            if dates:
+                # For an event range, use the final date.
+                event_date = range_end_date(dates[-1].group(0))
+
+                if event_date and event_date < today:
+                    return True
+
+        # Also check more specific event-date labels.
+        event_context = re.compile(
+            r"(?:"
+            r"when|"
+            r"event date|event dates|"
+            r"conference date|conference dates|"
+            r"meeting date|meeting dates|"
+            r"held on|held from|"
+            r"takes place|"
+            r"will take place|"
+            r"scheduled for"
+            r")"
+            r"\s*[:\-]?\s*.{0,120}",
+            re.IGNORECASE,
+        )
+
+    else:
+        # For all other sources, keep the original behavior,
+        # including generic "Date:" fields.
+        event_context = re.compile(
+            r"(?:"
+            r"when|"
+            r"event date|event dates|"
+            r"conference date|conference dates|"
+            r"meeting date|meeting dates|"
+            r"held on|held from|"
+            r"takes place|"
+            r"will take place|"
+            r"scheduled for|"
+            r"date"
+            r")"
+            r"\s*[:\-]?\s*.{0,120}",
+            re.IGNORECASE,
+        )
 
     for context in event_context.finditer(text):
         dates = list(date_re.finditer(context.group(0)))
