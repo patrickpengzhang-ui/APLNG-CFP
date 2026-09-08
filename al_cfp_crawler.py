@@ -727,7 +727,56 @@ def is_valid_item(item) -> bool:
             return False
 
     return True
+def is_expired(item) -> bool:
+    """
+    Return True when an item is explicitly marked as passed/closed/expired
+    or when its stated submission deadline has already passed.
+    """
+    text = clean_text(
+        f"{item.get('title', '')} {item.get('description', '')}"
+    )
 
+    # Explicit status markers
+    if re.search(r"\[(passed|closed|expired)\]", text, re.IGNORECASE):
+        return True
+
+    # Look for common deadline phrases followed by a date
+    deadline_pattern = re.compile(
+        r"(?:submission|abstract|paper|proposal|registration)"
+        r"\s+(?:deadline|due date|due)"
+        r".{0,80}?"
+        r"("
+        r"\b(?:January|February|March|April|May|June|July|August|"
+        r"September|October|November|December)\s+\d{1,2},?\s+\d{4}\b"
+        r"|"
+        r"\b\d{4}-\d{2}-\d{2}\b"
+        r"|"
+        r"\b\d{1,2}\s+(?:January|February|March|April|May|June|July|"
+        r"August|September|October|November|December)\s+\d{4}\b"
+        r")",
+        re.IGNORECASE,
+    )
+
+    match = deadline_pattern.search(text)
+
+    if match:
+        date_text = match.group(1)
+
+        for fmt in (
+            "%B %d, %Y",
+            "%B %d %Y",
+            "%Y-%m-%d",
+            "%d %B %Y",
+        ):
+            try:
+                deadline = datetime.strptime(
+                    date_text, fmt
+                ).date()
+                return deadline < datetime.now().date()
+            except ValueError:
+                continue
+
+    return False
 
 def dedupe(items):
     """Remove duplicate announcements using canonical URL and normalized title."""
