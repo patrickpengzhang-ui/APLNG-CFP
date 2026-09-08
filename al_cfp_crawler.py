@@ -728,6 +728,7 @@ def is_valid_item(item) -> bool:
 
     return True
 
+
 def is_expired(item) -> bool:
     """
     Return True when an item is explicitly marked as passed/closed/expired
@@ -1049,7 +1050,6 @@ def main():
     all_items = []
 
     # --- RSS/Atom sources ---
-    # --- RSS/Atom sources ---
     if args.local_feed:
         print(f"Reading local feed fixture: {args.local_feed}")
         raw = fetch(args.local_feed)
@@ -1109,7 +1109,7 @@ def main():
     all_items = [it for it in all_items if is_valid_item(it)]
     all_items = dedupe(all_items)
 
-        if args.show_all:
+            if args.show_all:
         kept = all_items
     else:
         kept = [
@@ -1118,32 +1118,32 @@ def main():
             and not is_expired(it)
         ]
 
-    if args.archive:
-    archive = load_archive(args.archive)
-    archive_before = len(archive)
+        if args.archive:
+        archive = load_archive(args.archive)
+        archive_before = len(archive)
 
-    # Re-check previously archived items against the current filters.
-    archive = {
-        key: item
-        for key, item in archive.items()
-        if is_valid_item(item)
-        and (
-            args.show_all
-            or (
-                (
-                    item.get("source") == "AAAL — Events"
-                    or is_relevant(item)
+        # Re-check previously archived items against the current filters.
+        archive = {
+            key: item
+            for key, item in archive.items()
+            if is_valid_item(item)
+            and (
+                args.show_all
+                or (
+                    (
+                        item.get("source") == "AAAL — Events"
+                        or is_relevant(item)
+                    )
+                    and not is_expired(item)
                 )
-                and not is_expired(item)
             )
-        )
-    }
+        }
 
-    archive = merge_into_archive(
-        archive,
-        kept,
-        args.archive_max_age_days
-    )
+        archive = merge_into_archive(
+            archive,
+            kept,
+            args.archive_max_age_days
+        )
         save_archive(args.archive, archive)
         print(f"\nArchive: {archive_before} previously known, "
               f"{len(kept)} kept from this run's fetch, "
