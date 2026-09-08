@@ -730,37 +730,34 @@ def crawl_wikicfp(html_bytes: bytes, source_name: str, base_url: str):
 
             # ----------------------------------------------------
             # Extract the "When" field.
-            # Example:
-            # When Jul 13, 2026 - Jul 14, 2026
             # ----------------------------------------------------
             m = re.search(
                 r"\bWhen\s+"
-                r"((?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)"
-                r"[a-z]*\s+\d{1,2},?\s+\d{4}"
-                r"\s*[-–]\s*"
-                r"(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)"
-                r"[a-z]*\s+\d{1,2},?\s+\d{4})",
-                detail_text,
-                re.IGNORECASE,
-            )
-
-            if m:
-                detail_parts.append(f"When: {m.group(1)}")
-
-            # ----------------------------------------------------
-            # Extract "Abstract Registration Due".
-            # ----------------------------------------------------
-            m = re.search(
-                r"\bAbstract Registration Due\s+"
-                r"((?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)"
-                r"[a-z]*\s+\d{1,2},?\s+\d{4})",
+                r"(.+?)"
+                r"(?=\s+Where\b)",
                 detail_text,
                 re.IGNORECASE,
             )
 
             if m:
                 detail_parts.append(
-                    f"Abstract Registration Due: {m.group(1)}"
+                    f"When: {m.group(1).strip()}"
+                )
+
+            # ----------------------------------------------------
+            # Extract "Abstract Registration Due".
+            # ----------------------------------------------------
+            m = re.search(
+                r"\bAbstract Registration Due\s+"
+                r"(.+?)"
+                r"(?=\s+Submission Deadline\b)",
+                detail_text,
+                re.IGNORECASE,
+            )
+
+            if m:
+                detail_parts.append(
+                    f"Abstract Registration Due: {m.group(1).strip()}"
                 )
 
             # ----------------------------------------------------
@@ -768,26 +765,31 @@ def crawl_wikicfp(html_bytes: bytes, source_name: str, base_url: str):
             # ----------------------------------------------------
             m = re.search(
                 r"\bSubmission Deadline\s+"
-                r"((?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)"
-                r"[a-z]*\s+\d{1,2},?\s+\d{4})",
+                r"(.+?)"
+                r"(?=\s+Call For Papers\b)",
                 detail_text,
                 re.IGNORECASE,
             )
 
             if m:
                 detail_parts.append(
-                    f"Submission Deadline: {m.group(1)}"
+                    f"Submission Deadline: {m.group(1).strip()}"
                 )
 
             # ----------------------------------------------------
             # Extract "Where".
             # ----------------------------------------------------
             m = re.search(
-                r"\bWhere\s+(.+?)(?=\s+(?:Abstract Registration Due|"
-                r"Submission Deadline|When)\b|$)",
+                r"\bWhere\s+(.+?)"
+                r"(?=\s+Abstract Registration Due\b)",
                 detail_text,
                 re.IGNORECASE,
             )
+
+            if m:
+                detail_parts.append(
+                    f"Where: {m.group(1).strip()}"
+                )
 
             if m:
                 detail_parts.append(
