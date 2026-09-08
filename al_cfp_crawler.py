@@ -1866,13 +1866,21 @@ def main():
             except Exception as e:
                 print(f"  ! failed to fetch {src['name']}: {e}", file=sys.stderr)
                 continue
+                
+    parsed = parse_rss(raw, src["name"])
 
-            parsed = parse_rss(raw, src["name"])
+    for it in parsed:
+        it["trusted"] = src.get("trusted", False)
 
-            for it in parsed:
-                it["trusted"] = src.get("trusted", False)
+    print(f"  -> {len(parsed)} items")
 
-            print(f"  -> {len(parsed)} items")
+    if src["name"] == "LINGUIST List — Calls for Papers":
+        for it in parsed:
+            print(f"     LINGUIST CALL: {it.get('title', '(no title)')}")
+
+    if src["name"] == "LINGUIST List — Conference Announcements":
+        for it in parsed:
+            print(f"     LINGUIST CONF: {it.get('title', '(no title)')}")
 
             # Diagnostic: show titles returned by Google Alerts.
             if src["name"] == "Google Alerts" and parsed:
