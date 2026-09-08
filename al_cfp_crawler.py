@@ -742,7 +742,6 @@ def is_relevant(item) -> bool:
         r"language and technology|"
         r"computer-assisted language learning|"
         r"computer assisted language learning|"
-        r"CALL|"
         r"multilingual education|"
         r"bilingual education|"
         r"language policy|"
