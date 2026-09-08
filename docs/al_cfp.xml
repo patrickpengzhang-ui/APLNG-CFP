@@ -5,7 +5,7 @@
     <link>https://linguistlist.org/</link>
     <description>Aggregated, filtered feed of calls for papers and conference announcements relevant to applied linguistics, crawled and pulled from LINGUIST List, Ling Alert, Google Alerts, WikiCFP, SSLW, and other sources.</description>
     <language>en-us</language>
-    <lastBuildDate>Tue, 08 Sep 2026 14:17:51 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 08 Sep 2026 14:55:26 +0000</lastBuildDate>
     <generator>al_cfp_crawler.py</generator>
     <item>
       <title>[LINGUIST List — Conference Announcements] Confs: Panel at NeMLA 2027: Linguistics, Language Attitudes, and Popular Culture (Panel)</title>
@@ -260,12 +260,6 @@
       <link>http://www.wikicfp.com/cfp/servlet/event.showcfp?eventid=194621&amp;copyownerid=193486</link>
       <guid isPermaLink="false">http://www.wikicfp.com/cfp/servlet/event.showcfp?eventid=194621&amp;copyownerid=193486</guid>
       <description>DL2 International Workshop 2026 | 1st DL2 International Workshop | When: Dec 3, 2026 - Dec 4, 2026 | Submission Deadline: Sep 30, 2026 Categories artificial intelligence education technology linguistics</description>
-    </item>
-    <item>
-      <title>[WikiCFP — Linguistics] DEPLING 2023</title>
-      <link>http://www.wikicfp.com/cfp/servlet/event.showcfp?eventid=169901&amp;copyownerid=320</link>
-      <guid isPermaLink="false">http://www.wikicfp.com/cfp/servlet/event.showcfp?eventid=169901&amp;copyownerid=320</guid>
-      <description>DEPLING 2023 | International Conference on Dependency Linguistics | When: Mar 9, 2023 - Sep 12, 2023 | Submission Deadline: Nov 15, 2922 Notification Due Jul 11, 2930 Final Version Due Oct 30, 2930 Categories NLP artificial intelligence linguistics</description>
     </item>
   </channel>
 </rss>
