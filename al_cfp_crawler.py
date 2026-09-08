@@ -705,6 +705,14 @@ CUSTOM_SCRAPERS = {
 # ---------------------------------------------------------------------------
 def is_relevant(item) -> bool:
     haystack = f"{item['title']} {item['description']}".lower()
+    # Exclude obvious job/career listings.
+    title = item["title"].lower()
+    if re.search(
+        r"\b(job|jobs|careers|employment|vacanc(?:y|ies))\b",
+        title,
+        re.I
+    ):
+        return False
 
     # The item should look like an actual academic opportunity.
     opportunity_pattern = re.compile(
