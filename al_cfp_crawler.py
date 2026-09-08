@@ -723,6 +723,9 @@ def crawl_wikicfp(html_bytes: bytes, source_name: str, base_url: str):
             detail_text = " ".join(detail_parser.parts)
             detail_text = clean_text(detail_text)
 
+            if row["title"] == "LCS 2026":
+                print(f"    LCS DETAIL TEXT: {detail_text[:3000]}")
+
             detail_parts = []
 
             # ----------------------------------------------------
