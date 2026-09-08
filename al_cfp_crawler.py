@@ -416,7 +416,7 @@ def parse_rss(xml_bytes: bytes, source_name: str):
     ]
 
     for item in rss_items:
-        title = html.unescape(child_text(item, {"title"}))
+        title = clean_text(child_text(item, {"title"}))
 
         link = child_text(item, {"link"})
 
@@ -457,9 +457,7 @@ def parse_rss(xml_bytes: bytes, source_name: str):
         ]
 
         for entry in atom_entries:
-            title = html.unescape(
-                child_text(entry, {"title"})
-            )
+           title = clean_text(child_text(entry, {"title"}))
 
             # Atom links are normally:
             # <link href="https://example.com/..." />
