@@ -1889,12 +1889,19 @@ def main():
             if (it.get("trusted") or is_relevant(it))
             and not is_expired(it)
         ]
-
     if args.archive:
         archive = load_archive(args.archive)
         archive_before = len(archive)
 
-        # Re-check previously archived items against the current filters.
+        # Refresh archived records with the latest fetched data BEFORE
+        # applying relevance and expiration filters.
+        archive = merge_into_archive(
+            archive,
+            all_items,
+            args.archive_max_age_days
+        )
+
+        # Re-check all archived items against the current filters.
         archive = {
             key: item
             for key, item in archive.items()
@@ -1911,17 +1918,13 @@ def main():
             )
         }
 
-        archive = merge_into_archive(
-            archive,
-            kept,
-            args.archive_max_age_days
-        )
         save_archive(args.archive, archive)
 
         print(f"\nArchive: {archive_before} previously known, "
-              f"{len(kept)} kept from this run's fetch, "
-              f"{len(archive)} total after merge (older than "
-              f"{args.archive_max_age_days} days pruned).")
+              f"{len(all_items)} fetched for refresh, "
+              f"{len(archive)} total after filtering "
+              f"(older than {args.archive_max_age_days} days pruned).")
+
         kept = list(archive.values())
 
     kept.sort(key=lambda it: it["pub_dt"] or datetime.min.replace(tzinfo=timezone.utc), reverse=True)
