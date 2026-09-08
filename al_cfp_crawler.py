@@ -457,7 +457,7 @@ def parse_rss(xml_bytes: bytes, source_name: str):
         ]
 
         for entry in atom_entries:
-           title = clean_text(child_text(entry, {"title"}))
+            title = clean_text(child_text(entry, {"title"}))
 
             # Atom links are normally:
             # <link href="https://example.com/..." />
@@ -1106,10 +1106,10 @@ def main():
             print(f"  -> {len(parsed)} items")
             all_items.extend(parsed)
 
-    all_items = [it for it in all_items if is_valid_item(it)]
+        all_items = [it for it in all_items if is_valid_item(it)]
     all_items = dedupe(all_items)
 
-            if args.show_all:
+    if args.show_all:
         kept = all_items
     else:
         kept = [
@@ -1118,7 +1118,7 @@ def main():
             and not is_expired(it)
         ]
 
-        if args.archive:
+            if args.archive:
         archive = load_archive(args.archive)
         archive_before = len(archive)
 
@@ -1145,6 +1145,7 @@ def main():
             args.archive_max_age_days
         )
         save_archive(args.archive, archive)
+
         print(f"\nArchive: {archive_before} previously known, "
               f"{len(kept)} kept from this run's fetch, "
               f"{len(archive)} total after merge (older than "
