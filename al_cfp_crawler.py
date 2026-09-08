@@ -727,6 +727,7 @@ def is_valid_item(item) -> bool:
             return False
 
     return True
+
 def is_expired(item) -> bool:
     """
     Return True when an item is explicitly marked as passed/closed/expired
@@ -1108,14 +1109,14 @@ def main():
     all_items = [it for it in all_items if is_valid_item(it)]
     all_items = dedupe(all_items)
 
-    if args.show_all:
-    kept = all_items
-else:
-    kept = [
-        it for it in all_items
-        if (it.get("trusted") or is_relevant(it))
-        and not is_expired(it)
-    ]
+        if args.show_all:
+        kept = all_items
+    else:
+        kept = [
+            it for it in all_items
+            if (it.get("trusted") or is_relevant(it))
+            and not is_expired(it)
+        ]
 
     if args.archive:
     archive = load_archive(args.archive)
