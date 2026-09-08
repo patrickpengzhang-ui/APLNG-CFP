@@ -1850,7 +1850,7 @@ def main():
     all_items = []
 
     # --- RSS/Atom sources ---
-    elif not args.no_feeds:
+    if not args.no_feeds:
         for src in SOURCES:
             print(f"Fetching feed: {src['name']} <{src['url']}>")
             try:
