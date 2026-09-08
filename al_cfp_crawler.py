@@ -689,27 +689,14 @@ class _WikiCFPRowParser(HTMLParser):
 class _WikiCFPDetailParser(HTMLParser):
     def __init__(self):
         super().__init__()
-        self.in_td = False
-        self.current = []
-        self.cells = []
-
-    def handle_starttag(self, tag, attrs):
-        if tag == "td":
-            self.in_td = True
-            self.current = []
-
-    def handle_endtag(self, tag):
-        if tag == "td" and self.in_td:
-            text = clean_text(" ".join(self.current))
-            if text:
-                self.cells.append(text)
-            self.in_td = False
-            self.current = []
+        self.parts = []
 
     def handle_data(self, data):
-        if self.in_td:
-            self.current.append(data)
-          
+        text = clean_text(data)
+        if text:
+            self.parts.append(text)
+
+
 def crawl_wikicfp(html_bytes: bytes, source_name: str, base_url: str):
     text = html_bytes.decode("utf-8", errors="replace")
     parser = _WikiCFPRowParser(base_url)
@@ -720,42 +707,92 @@ def crawl_wikicfp(html_bytes: bytes, source_name: str, base_url: str):
     for row in parser.rows:
         description = row["extra"]
 
-        # Fetch the individual WikiCFP event page so we can
-        # capture the actual conference date and deadlines.
         try:
+            # Fetch the individual WikiCFP event page.
             detail_bytes = fetch(row["link"])
-            detail_text = detail_bytes.decode(
+            detail_html = detail_bytes.decode(
                 "utf-8",
                 errors="replace"
             )
 
+            # Convert the detail page to readable plain text.
             detail_parser = _WikiCFPDetailParser()
-            detail_parser.feed(detail_text)
+            detail_parser.feed(detail_html)
 
-            cells = detail_parser.cells
+            detail_text = " ".join(detail_parser.parts)
+            detail_text = clean_text(detail_text)
 
-            # WikiCFP detail pages use a simple label/value table.
-            # Combine the useful date/deadline fields into the
-            # description so is_expired() can evaluate them.
             detail_parts = []
 
-            for i, cell in enumerate(cells):
-                if cell in {
-                    "When",
-                    "Where",
-                    "Abstract Registration Due",
-                    "Submission Deadline",
-                }:
-                    if i + 1 < len(cells):
-                        detail_parts.append(
-                            f"{cell}: {cells[i + 1]}"
-                        )
+            # ----------------------------------------------------
+            # Extract the "When" field.
+            # Example:
+            # When Jul 13, 2026 - Jul 14, 2026
+            # ----------------------------------------------------
+            m = re.search(
+                r"\bWhen\s+"
+                r"((?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)"
+                r"[a-z]*\s+\d{1,2},?\s+\d{4}"
+                r"\s*[-–]\s*"
+                r"(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)"
+                r"[a-z]*\s+\d{1,2},?\s+\d{4})",
+                detail_text,
+                re.IGNORECASE,
+            )
+
+            if m:
+                detail_parts.append(f"When: {m.group(1)}")
+
+            # ----------------------------------------------------
+            # Extract "Abstract Registration Due".
+            # ----------------------------------------------------
+            m = re.search(
+                r"\bAbstract Registration Due\s+"
+                r"((?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)"
+                r"[a-z]*\s+\d{1,2},?\s+\d{4})",
+                detail_text,
+                re.IGNORECASE,
+            )
+
+            if m:
+                detail_parts.append(
+                    f"Abstract Registration Due: {m.group(1)}"
+                )
+
+            # ----------------------------------------------------
+            # Extract "Submission Deadline".
+            # ----------------------------------------------------
+            m = re.search(
+                r"\bSubmission Deadline\s+"
+                r"((?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)"
+                r"[a-z]*\s+\d{1,2},?\s+\d{4})",
+                detail_text,
+                re.IGNORECASE,
+            )
+
+            if m:
+                detail_parts.append(
+                    f"Submission Deadline: {m.group(1)}"
+                )
+
+            # ----------------------------------------------------
+            # Extract "Where".
+            # ----------------------------------------------------
+            m = re.search(
+                r"\bWhere\s+(.+?)(?=\s+(?:Abstract Registration Due|"
+                r"Submission Deadline|When)\b|$)",
+                detail_text,
+                re.IGNORECASE,
+            )
+
+            if m:
+                detail_parts.append(
+                    f"Where: {m.group(1).strip()}"
+                )
 
             if detail_parts:
                 description = " | ".join(
-                    part
-                    for part in [description] + detail_parts
-                    if part
+                    [description] + detail_parts
                 )
 
         except Exception as e:
@@ -775,7 +812,6 @@ def crawl_wikicfp(html_bytes: bytes, source_name: str, base_url: str):
         })
 
     return items
-
 
 # Map a CRAWL_SOURCES "name" to a custom scraper function, if you have one.
 # Any source not listed here falls back to the generic block extractor.
