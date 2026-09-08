@@ -704,8 +704,69 @@ CUSTOM_SCRAPERS = {
 # Shared: filtering, dedup, output
 # ---------------------------------------------------------------------------
 def is_relevant(item) -> bool:
-    haystack = f"{item['title']} {item['description']}"
-    return bool(KEYWORD_PATTERN.search(haystack))
+    haystack = f"{item['title']} {item['description']}".lower()
+
+    # The item should look like an actual academic opportunity.
+    opportunity_pattern = re.compile(
+        r"\b("
+        r"call for papers|call for abstracts|call for proposals|"
+        r"cfp|submit|submission|submissions|"
+        r"conference|workshop|symposium|"
+        r"special issue|journal|"
+        r"deadline|abstract deadline|paper deadline|"
+        r"registration"
+        r")\b",
+        re.I
+    )
+
+    # Applied Linguistics / language education topics.
+    applied_pattern = re.compile(
+        r"\b("
+        r"applied linguistics|"
+        r"language education|"
+        r"language teaching|"
+        r"language learning|"
+        r"english language teaching|"
+        r"elt|"
+        r"tesol|"
+        r"tefl|"
+        r"esl|"
+        r"efl|"
+        r"second language acquisition|"
+        r"second-language acquisition|"
+        r"foreign language|"
+        r"language assessment|"
+        r"language testing|"
+        r"teacher education|"
+        r"language pedagogy|"
+        r"language and technology|"
+        r"computer-assisted language learning|"
+        r"computer assisted language learning|"
+        r"CALL|"
+        r"multilingual education|"
+        r"bilingual education|"
+        r"language policy|"
+        r"academic writing|"
+        r"writing pedagogy|"
+        r"language for specific purposes|"
+        r"LSP|"
+        r"English for academic purposes|"
+        r"EAP|"
+        r"English for specific purposes|"
+        r"ESP|"
+        r"interlanguage|"
+        r"language acquisition|"
+        r"language pedagogy|"
+        r"classroom interaction|"
+        r"language curriculum"
+        r")\b",
+        re.I
+    )
+
+    return bool(
+        opportunity_pattern.search(haystack)
+        and applied_pattern.search(haystack)
+    )
 
 
 def is_valid_item(item) -> bool:
