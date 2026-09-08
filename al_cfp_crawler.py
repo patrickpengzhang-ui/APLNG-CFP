@@ -1850,14 +1850,6 @@ def main():
     all_items = []
 
     # --- RSS/Atom sources ---
-    if args.local_feed:
-        print(f"Reading local feed fixture: {args.local_feed}")
-        raw = fetch(args.local_feed)
-        parsed = parse_rss(raw, source_name="(local test feed)")
-        for it in parsed:
-            it["trusted"] = False
-        all_items.extend(parsed)
-
     elif not args.no_feeds:
         for src in SOURCES:
             print(f"Fetching feed: {src['name']} <{src['url']}>")
@@ -1866,21 +1858,21 @@ def main():
             except Exception as e:
                 print(f"  ! failed to fetch {src['name']}: {e}", file=sys.stderr)
                 continue
-                
-    parsed = parse_rss(raw, src["name"])
 
-    for it in parsed:
-        it["trusted"] = src.get("trusted", False)
+            parsed = parse_rss(raw, src["name"])
 
-    print(f"  -> {len(parsed)} items")
+            for it in parsed:
+                it["trusted"] = src.get("trusted", False)
 
-    if src["name"] == "LINGUIST List — Calls for Papers":
-        for it in parsed:
-            print(f"     LINGUIST CALL: {it.get('title', '(no title)')}")
+            print(f"  -> {len(parsed)} items")
 
-    if src["name"] == "LINGUIST List — Conference Announcements":
-        for it in parsed:
-            print(f"     LINGUIST CONF: {it.get('title', '(no title)')}")
+            if src["name"] == "LINGUIST List — Calls for Papers":
+                for it in parsed:
+                    print(f"     LINGUIST CALL: {it.get('title', '(no title)')}")
+
+            if src["name"] == "LINGUIST List — Conference Announcements":
+                for it in parsed:
+                    print(f"     LINGUIST CONF: {it.get('title', '(no title)')}")
 
             # Diagnostic: show titles returned by Google Alerts.
             if src["name"] == "Google Alerts" and parsed:
