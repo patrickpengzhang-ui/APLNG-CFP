@@ -93,7 +93,11 @@ SOURCES = [
         "name": "LINGUIST List — Calls for Papers",
         "url": "https://linguistlist.org/issues/rss/calls",
     },
-
+    # Second language writing conference site (WordPress native feed)
+    {
+        "name": "SSLW — Symposium on Second Language Writing",
+        "url": "https://pmatsuda.net/sslw/feed/",
+    },
     # Google Alerts
     {
         "name": "Google Alerts",
