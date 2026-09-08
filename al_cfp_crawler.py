@@ -1531,10 +1531,11 @@ def main():
 
     feed_title = "Applied Linguistics — Calls for Papers & Conferences"
     feed_description = (
-        "Aggregated, filtered feed of calls for papers and conference "
-        "announcements relevant to applied linguistics, crawled and "
-        "pulled from LINGUIST List, Ling Alert, WikiCFP and other sources."
-    )
+    "Aggregated, filtered feed of calls for papers and conference "
+    "announcements relevant to applied linguistics, crawled and "
+    "pulled from LINGUIST List, Ling Alert, Google Alerts, WikiCFP, "
+    "SSLW, and other sources."
+)
 
     rss = build_rss(
         kept,
