@@ -839,7 +839,20 @@ def is_relevant(item) -> bool:
         re.I
     ):
         return False
+    # Remove only specific known false positives.
+    title_for_filter = re.sub(
+        r"^\[[^\]]+\]\s*",
+        "",
+        title,
+    ).strip()
 
+    known_false_positives = {
+        "conference presentation by dr ger coffey | university of limerick",
+        "announcing the jslw award",
+    }
+
+    if title_for_filter.lower() in known_false_positives:
+        return False
     # The item should look like an actual academic opportunity.
     opportunity_pattern = re.compile(
         r"\b("
