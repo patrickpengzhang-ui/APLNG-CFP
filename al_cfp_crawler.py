@@ -858,7 +858,7 @@ def is_relevant(item) -> bool:
         r"\b("
         r"call for papers|call for abstracts|call for proposals|"
         r"cfp|submit|submission|submissions|"
-        r"conference|workshop|symposium|panel|"
+        r"confs?|conference|workshop|symposium|panel|"
         r"colloquium|seminar|roundtable|"
         r"special issue|journal|"
         r"deadline|abstract deadline|paper deadline|"
