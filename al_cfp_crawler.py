@@ -732,15 +732,34 @@ def is_valid_item(item) -> bool:
 
 
 def dedupe(items):
-    seen = set()
-    out = []
-    for it in items:
-        key = it["guid"] or it["link"] or it["title"]
-        if key in seen:
+    """Remove duplicate announcements using canonical URL and normalized title."""
+    seen_urls = set()
+    seen_titles = set()
+    result = []
+
+    for item in items:
+        url = (item.get("url") or "").strip()
+
+        title = clean_text(item.get("title") or "").lower()
+        title = re.sub(r"\s+", " ", title)
+        title = re.sub(r"[^a-z0-9\s]", "", title).strip()
+
+        # Prefer URL deduplication when a URL exists.
+        if url and url in seen_urls:
             continue
-        seen.add(key)
-        out.append(it)
-    return out
+
+        # Also catch duplicate announcements from different Google Alerts.
+        if title and title in seen_titles:
+            continue
+
+        if url:
+            seen_urls.add(url)
+        if title:
+            seen_titles.add(title)
+
+        result.append(item)
+
+    return result
 
 
 # ---------------------------------------------------------------------------
