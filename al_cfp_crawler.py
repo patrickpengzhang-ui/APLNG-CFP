@@ -686,21 +686,94 @@ class _WikiCFPRowParser(HTMLParser):
         if self._current_cell is not None:
             self._current_cell.append(data)
 
+class _WikiCFPDetailParser(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.in_td = False
+        self.current = []
+        self.cells = []
 
+    def handle_starttag(self, tag, attrs):
+        if tag == "td":
+            self.in_td = True
+            self.current = []
+
+    def handle_endtag(self, tag):
+        if tag == "td" and self.in_td:
+            text = clean_text(" ".join(self.current))
+            if text:
+                self.cells.append(text)
+            self.in_td = False
+            self.current = []
+
+    def handle_data(self, data):
+        if self.in_td:
+            self.current.append(data)
+          
 def crawl_wikicfp(html_bytes: bytes, source_name: str, base_url: str):
     text = html_bytes.decode("utf-8", errors="replace")
     parser = _WikiCFPRowParser(base_url)
     parser.feed(text)
+
     items = []
+
     for row in parser.rows:
+        description = row["extra"]
+
+        # Fetch the individual WikiCFP event page so we can
+        # capture the actual conference date and deadlines.
+        try:
+            detail_bytes = fetch(row["link"])
+            detail_text = detail_bytes.decode(
+                "utf-8",
+                errors="replace"
+            )
+
+            detail_parser = _WikiCFPDetailParser()
+            detail_parser.feed(detail_text)
+
+            cells = detail_parser.cells
+
+            # WikiCFP detail pages use a simple label/value table.
+            # Combine the useful date/deadline fields into the
+            # description so is_expired() can evaluate them.
+            detail_parts = []
+
+            for i, cell in enumerate(cells):
+                if cell in {
+                    "When",
+                    "Where",
+                    "Abstract Registration Due",
+                    "Submission Deadline",
+                }:
+                    if i + 1 < len(cells):
+                        detail_parts.append(
+                            f"{cell}: {cells[i + 1]}"
+                        )
+
+            if detail_parts:
+                description = " | ".join(
+                    part
+                    for part in [description] + detail_parts
+                    if part
+                )
+
+        except Exception as e:
+            print(
+                f"Warning: could not fetch WikiCFP detail page "
+                f"{row['link']}: {e}",
+                file=sys.stderr,
+            )
+
         items.append({
             "title": row["title"],
             "link": row["link"],
             "guid": row["link"],
             "pub_dt": None,
-            "description": row["extra"],
+            "description": description,
             "source": source_name,
         })
+
     return items
 
 
