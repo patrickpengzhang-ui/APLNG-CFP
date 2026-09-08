@@ -349,14 +349,16 @@ def fetch(url_or_path: str) -> bytes:
 def strip_tags(text: str) -> str:
     return re.sub(r"<[^>]+>", " ", text or "")
 
-   _WP_FOOTER_PATTERN = re.compile(
-       r"\s*The post .*? appeared first on .*?\.\s*$", re.IGNORECASE | re.DOTALL
-   )
 
-   def clean_text(text: str) -> str:
-       text = re.sub(r"\s+", " ", html.unescape(strip_tags(text or ""))).strip()
-       text = _WP_FOOTER_PATTERN.sub("", text).strip()
-       return text
+_WP_FOOTER_PATTERN = re.compile(
+    r"\s*The post .*? appeared first on .*?\.\s*$", re.IGNORECASE | re.DOTALL
+)
+
+
+def clean_text(text: str) -> str:
+    text = re.sub(r"\s+", " ", html.unescape(strip_tags(text or ""))).strip()
+    text = _WP_FOOTER_PATTERN.sub("", text).strip()
+    return text
 
 def is_valid_link(url: str) -> bool:
     """Reject non-web links that should never appear in the RSS feed."""
