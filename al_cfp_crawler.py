@@ -1490,7 +1490,22 @@ def is_expired(item) -> bool:
             )
 
         return None
+    # WikiCFP: explicitly check the end date in the "When:" event range.
+    if item.get("source") == "WikiCFP — Linguistics":
+        m = re.search(
+            r"\bWhen:\s*(.+?)(?=\s+\|\s+|\s+Submission Deadline\b|$)",
+            text,
+            re.IGNORECASE,
+        )
 
+        if m:
+            dates = list(date_re.finditer(m.group(1)))
+
+            if dates:
+                event_date = range_end_date(dates[-1].group(0))
+
+                if event_date and event_date < today:
+                    return True
     # ------------------------------------------------------------
     # 3. Submission deadlines
     #
