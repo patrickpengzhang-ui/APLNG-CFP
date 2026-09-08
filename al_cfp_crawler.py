@@ -1106,7 +1106,7 @@ def main():
             print(f"  -> {len(parsed)} items")
             all_items.extend(parsed)
 
-        all_items = [it for it in all_items if is_valid_item(it)]
+    all_items = [it for it in all_items if is_valid_item(it)]
     all_items = dedupe(all_items)
 
     if args.show_all:
@@ -1118,7 +1118,7 @@ def main():
             and not is_expired(it)
         ]
 
-            if args.archive:
+    if args.archive:
         archive = load_archive(args.archive)
         archive_before = len(archive)
 
