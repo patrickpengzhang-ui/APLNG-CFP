@@ -708,7 +708,8 @@ def crawl_wikicfp(html_bytes: bytes, source_name: str, base_url: str):
         description = row["extra"]
 
         try:
-            # Fetch the individual WikiCFP event page.
+            print(f"    WIKICFP DETAIL: {row['title']} -> {row['link']}")
+          # Fetch the individual WikiCFP event page.
             detail_bytes = fetch(row["link"])
             detail_html = detail_bytes.decode(
                 "utf-8",
