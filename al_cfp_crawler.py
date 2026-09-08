@@ -1258,53 +1258,183 @@ def is_valid_item(item) -> bool:
 
 def is_expired(item) -> bool:
     """
-    Return True when an item is explicitly marked as passed/closed/expired
-    or when its stated submission deadline has already passed.
+    Return True when an item is explicitly marked as passed/closed/expired,
+    when its submission deadline has passed, or when a clearly labelled
+    event/conference date has passed.
+
+    This is intentionally conservative: ordinary dates appearing elsewhere
+    in a description are NOT treated as expiration dates.
     """
     text = clean_text(
         f"{item.get('title', '')} {item.get('description', '')}"
     )
 
-    # Explicit status markers
-    if re.search(r"\[(passed|closed|expired)\]", text, re.IGNORECASE):
+    today = datetime.now().date()
+
+    # ------------------------------------------------------------
+    # 1. Explicit status markers
+    # ------------------------------------------------------------
+    if re.search(
+        r"\[(?:passed|closed|expired)\]",
+        text,
+        re.IGNORECASE,
+    ):
         return True
 
-    # Look for common deadline phrases followed by a date
-    deadline_pattern = re.compile(
-        r"(?:submission|abstract|paper|proposal|registration)"
-        r"\s+(?:deadline|due date|due)"
-        r".{0,80}?"
-        r"("
+    # ------------------------------------------------------------
+    # 2. Date parsing helpers
+    # ------------------------------------------------------------
+    date_formats = (
+        "%B %d, %Y",     # July 31, 2026
+        "%B %d %Y",      # July 31 2026
+        "%b %d, %Y",     # Jul 31, 2026
+        "%b %d %Y",      # Jul 31 2026
+        "%d %B %Y",      # 31 July 2026
+        "%d %b %Y",      # 31 Jul 2026
+        "%d-%B-%Y",      # 31-July-2026
+        "%d-%b-%Y",      # 31-Jul-2026
+        "%Y-%m-%d",      # 2026-07-31
+    )
+
+    def parse_date(date_text):
+        date_text = re.sub(r"\s+", " ", date_text.strip())
+
+        for fmt in date_formats:
+            try:
+                return datetime.strptime(date_text, fmt).date()
+            except ValueError:
+                pass
+
+        return None
+
+    # Common date expressions, including ranges.
+    date_re = re.compile(
+        r"(?:"
         r"\b(?:January|February|March|April|May|June|July|August|"
-        r"September|October|November|December)\s+\d{1,2},?\s+\d{4}\b"
+        r"September|October|November|December)"
+        r"\s+\d{1,2}(?:[-–]\d{1,2})?,?\s+\d{4}\b"
+        r"|"
+        r"\b\d{1,2}(?:[-–]\d{1,2})?\s+"
+        r"(?:January|February|March|April|May|June|July|August|"
+        r"September|October|November|December)"
+        r"\s+\d{4}\b"
+        r"|"
+        r"\b(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec)"
+        r"[a-z]*\s+\d{1,2}(?:[-–]\d{1,2})?,?\s+\d{4}\b"
+        r"|"
+        r"\b\d{1,2}(?:[-–]\d{1,2})?-"
+        r"(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec)"
+        r"[a-z]*-\d{4}\b"
         r"|"
         r"\b\d{4}-\d{2}-\d{2}\b"
-        r"|"
-        r"\b\d{1,2}\s+(?:January|February|March|April|May|June|July|"
-        r"August|September|October|November|December)\s+\d{4}\b"
         r")",
         re.IGNORECASE,
     )
 
-    match = deadline_pattern.search(text)
+    def range_end_date(date_text):
+        """
+        Return the final date when the expression contains a date range.
+        """
+        s = date_text.strip()
 
-    if match:
-        date_text = match.group(1)
+        # Simple date.
+        d = parse_date(s)
+        if d:
+            return d
 
-        for fmt in (
-            "%B %d, %Y",
-            "%B %d %Y",
-            "%Y-%m-%d",
-            "%d %B %Y",
-        ):
-            try:
-                deadline = datetime.strptime(
-                    date_text, fmt
-                ).date()
-                return deadline < datetime.now().date()
-            except ValueError:
-                continue
+        # July 15-17, 2026
+        m = re.match(
+            r"^(?P<month>[A-Za-z]+)\s+"
+            r"\d{1,2}[-–](?P<day>\d{1,2}),?\s+"
+            r"(?P<year>\d{4})$",
+            s,
+            re.IGNORECASE,
+        )
 
+        if m:
+            return parse_date(
+                f"{m.group('month')} "
+                f"{m.group('day')}, "
+                f"{m.group('year')}"
+            )
+
+        # 15-17 July 2026
+        m = re.match(
+            r"^\d{1,2}[-–](?P<day>\d{1,2})\s+"
+            r"(?P<month>[A-Za-z]+)\s+"
+            r"(?P<year>\d{4})$",
+            s,
+            re.IGNORECASE,
+        )
+
+        if m:
+            return parse_date(
+                f"{m.group('day')} "
+                f"{m.group('month')} "
+                f"{m.group('year')}"
+            )
+
+        return None
+
+    # ------------------------------------------------------------
+    # 3. Submission deadlines
+    #
+    # Only inspect dates occurring shortly after a clear deadline
+    # phrase. This prevents random dates in a CFP description from
+    # accidentally expiring the item.
+    # ------------------------------------------------------------
+    deadline_context = re.compile(
+        r"(?:submission|abstract|paper|proposal|registration)"
+        r"\s+(?:deadline|due date|due)"
+        r".{0,100}",
+        re.IGNORECASE,
+    )
+
+    for context in deadline_context.finditer(text):
+        dates = list(date_re.finditer(context.group(0)))
+
+        for match in dates:
+            deadline = range_end_date(match.group(0))
+
+            if deadline and deadline < today:
+                return True
+
+    # ------------------------------------------------------------
+    # 4. Clearly labelled event/conference dates
+    #
+    # We deliberately DO NOT inspect every date in the description.
+    # A date must follow a label that strongly indicates it is the
+    # actual event date.
+    # ------------------------------------------------------------
+    event_context = re.compile(
+        r"(?:"
+        r"when|"
+        r"event date|event dates|"
+        r"conference date|conference dates|"
+        r"meeting date|meeting dates|"
+        r"held on|held from|"
+        r"takes place|"
+        r"will take place|"
+        r"scheduled for|"
+        r"date"
+        r")"
+        r"\s*[:\-]?\s*.{0,120}",
+        re.IGNORECASE,
+    )
+
+    for context in event_context.finditer(text):
+        dates = list(date_re.finditer(context.group(0)))
+
+        if dates:
+            # For an event range, use the final date.
+            event_date = range_end_date(dates[-1].group(0))
+
+            if event_date and event_date < today:
+                return True
+
+    # ------------------------------------------------------------
+    # 5. No reliable expiration information found
+    # ------------------------------------------------------------
     return False
 
 def dedupe(items):
