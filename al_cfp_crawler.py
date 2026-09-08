@@ -738,7 +738,7 @@ def dedupe(items):
     result = []
 
     for item in items:
-        url = (item.get("url") or "").strip()
+        url = (item.get("link") or "").strip()
 
         title = clean_text(item.get("title") or "").lower()
         title = re.sub(r"\s+", " ", title)
