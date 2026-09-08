@@ -1960,6 +1960,29 @@ def main():
             print(f"  -> {len(parsed)} items")
             all_items.extend(parsed)
 
+    # DEBUG: find the LINGUIST List 37.2838 item and test every filter.
+    for it in all_items:
+        text = (
+            it.get("title", "")
+            + " "
+            + it.get("description", "")
+            + " "
+            + it.get("link", "")
+            + " "
+            + it.get("guid", "")
+        )
+
+        if "37/2838" in text or "Language Attitudes and Popular Linguistics" in text:
+            print("\n===== DEBUG: LINGUIST 37.2838 =====")
+            print("SOURCE:", it.get("source"))
+            print("TITLE:", it.get("title"))
+            print("LINK:", it.get("link"))
+            print("TRUSTED:", it.get("trusted"))
+            print("VALID:", is_valid_item(it))
+            print("RELEVANT:", is_relevant(it))
+            print("EXPIRED:", is_expired(it))
+            print("====================================\n")
+            
     all_items = [it for it in all_items if is_valid_item(it)]
     all_items = dedupe(all_items)
 
