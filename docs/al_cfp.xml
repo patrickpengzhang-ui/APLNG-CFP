@@ -5,8 +5,15 @@
     <link>https://linguistlist.org/</link>
     <description>Aggregated, filtered feed of calls for papers and conference announcements relevant to applied linguistics, crawled and pulled from LINGUIST List, Ling Alert, Google Alerts, WikiCFP, SSLW, and other sources.</description>
     <language>en-us</language>
-    <lastBuildDate>Sun, 04 Oct 2026 15:02:47 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 05 Oct 2026 07:19:36 +0000</lastBuildDate>
     <generator>al_cfp_crawler.py</generator>
+    <item>
+      <title>[Google Alerts] Teachers are not candles, they are humans - New Age</title>
+      <link>https://www.google.com/url?rct=j&amp;sa=t&amp;url=https://www.newagebd.net/post/opinion/316540/teachers-are-not-candles-they-are-humans&amp;ct=ga&amp;cd=CAIyGmFmZmI2MzI5OWZhODRkY2U6Y29tOmVuOlVT&amp;usg=AOvVaw34yrx3BFaOpaVoL5XfCbep</link>
+      <guid isPermaLink="false">tag:google.com,2013:googlealerts/feed:6949934724342422585</guid>
+      <pubDate>Mon, 05 Oct 2026 01:17:42 +0000</pubDate>
+      <description>RECENTLY, I attended the three-day annual conference of the British Association for Applied Linguistics , which took place at Aston University in ...</description>
+    </item>
     <item>
       <title>[Google Alerts] Google Scholar citation for B&#x27;laan students study 2026 - Facebook</title>
       <link>https://www.google.com/url?rct=j&amp;sa=t&amp;url=https://www.facebook.com/IJAMSBeyondBooksPublication/posts/google-scholar-citationoctober-2-2026article-titlemga-saloobin-motibasyon-at-dis/1469741095211750/&amp;ct=ga&amp;cd=CAIyGjZiNmRkM2Y0YmI5Y2MwMzI6Y29tOmVuOlVT&amp;usg=AOvVaw2tr8jFfE4gGZcUPF6OWgZs</link>
@@ -34,6 +41,13 @@
       <guid isPermaLink="false">tag:google.com,2013:googlealerts/feed:13737720070946551489</guid>
       <pubDate>Sat, 03 Oct 2026 05:18:41 +0000</pubDate>
       <description>Congratulations to Youssef Bouaddi, a PhD student in Applied Linguistics at Carleton University, who received first place for Best Student Paper ...</description>
+    </item>
+    <item>
+      <title>[Google Alerts] SLALS PhD Student Wins Best Student Paper at Language Assessment Conference</title>
+      <link>https://www.google.com/url?rct=j&amp;sa=t&amp;url=https://carleton.ca/slals/2026/carleton-phd-student-wins-best-student-paper-at-language-assessment-conference/&amp;ct=ga&amp;cd=CAIyGjVhN2NmNWUzNTFmYzVlZWQ6Y29tOmVuOlVT&amp;usg=AOvVaw1u3kn7Lu8WEd0scfLvX6Yk</link>
+      <guid isPermaLink="false">tag:google.com,2013:googlealerts/feed:8448164581354876696</guid>
+      <pubDate>Sat, 03 Oct 2026 05:18:41 +0000</pubDate>
+      <description>Congratulations to Youssef Bouaddi, a PhD student in Applied Linguistics ... ESL Classroom.” His SSHRC-funded research examines fairness and ...</description>
     </item>
     <item>
       <title>[Google Alerts] UL well represented at the European Association of Computer Assisted Language Learning ...</title>
@@ -1403,6 +1417,12 @@
       <link>http://www.wikicfp.com/cfp/servlet/event.showcfp?eventid=203492&amp;copyownerid=13881</link>
       <guid isPermaLink="false">http://www.wikicfp.com/cfp/servlet/event.showcfp?eventid=203492&amp;copyownerid=13881</guid>
       <description>ICLL 2027 | 2027 11th International Conference on Linguistics and Literature (ICLL 2027) | When: Jul 15, 2027 - Jul 18, 2027 | Submission Deadline: Feb 25, 2027 Categories literature linguistics language teaching</description>
+    </item>
+    <item>
+      <title>[WikiCFP — Linguistics] NLPCL 2026</title>
+      <link>http://www.wikicfp.com/cfp/servlet/event.showcfp?eventid=195149&amp;copyownerid=33993</link>
+      <guid isPermaLink="false">http://www.wikicfp.com/cfp/servlet/event.showcfp?eventid=195149&amp;copyownerid=33993</guid>
+      <description>NLPCL 2026 | 7th International Conference on Natural Language Processing and Computational Linguistics | When: Nov 21, 2026 - Nov 22, 2026 | Submission Deadline: Oct 10, 2026 Notification Due Nov 6, 2026 Final Version Due Nov 13, 2026 Categories NLP linguistics ontology natural language processing</description>
     </item>
   </channel>
 </rss>
